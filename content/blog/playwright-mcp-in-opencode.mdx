@@ -1,0 +1,108 @@
+---
+title: "Playwright MCP in the OpenCode CLI"
+description: "A real browser for your terminal agent: what Playwright MCP does, and what changed in the OpenCode config between V1 and V2."
+date: "2026-10-10"
+tags: ["opencode", "playwright", "mcp", "agents"]
+---
+
+A coding agent can read files. Run commands but it cannot see if a page works when you ask. Playwright MCP solves this problem by giving the agent a browser.
+
+## What it is
+
+`@playwright/mcp` is the MCP server created by Microsoft for browser automation. It needs NodeJS version 18 or newer. Is started with `npx`. Of capturing screenshots it returns accessibility snapshots. The model reads a tree of roles and element references then performs actions such as `browser_click` and `browser_type`. A vision model is not needed; actions are deterministic and text data is much cheaper than images. By default it communicates over stdio. You can also start it with `--port 8931` to expose an HTTP interface at `http://localhost:8931/mcp` if you prefer to keep it running as a long‑lived process.
+
+## Why it fits an agent CLI
+
+- **Small tool surface.** It can play with the UI like it can navigate, take snapshots, click, type, fill forms, switch tabs and wait.
+
+- **Genuine debugging depth.** You get console messages, detailed network requests, JavaScript evaluation results and screenshots or PDFs that are written to disk.
+
+## Adding it to OpenCode
+
+```sh
+
+opencode mcp add playwright -- npx -y @playwright/mcp@latest
+
+opencode mcp list
+
+```
+
+The `mcp add` command writes the configuration into the project. Use `--global` to apply to all projects and `--env` to set environment variables for the server. Inside the TUI the `/mcps` section shows the servers that are connected.
+
+## What changed from V1 to V2
+
+Both versions use the `opencode` command,. They are not installed side, by side: V2 replaces the V1 binary. Your configuration is read from the paths as before and V1‑shaped entries still load so converting is optional. The MCP entry itself:
+
+```jsonc
+
+// V1
+
+{
+
+"mcp": {
+
+"playwright": {
+
+"type": "
+
+"command": ["npx" "@playwright/mcp"]
+
+"enabled": true
+
+"timeout": 30000
+
+}
+
+}
+
+}
+
+```
+
+```jsonc
+
+// V2
+
+{
+
+"mcp": {
+
+"servers": {
+
+"playwright": {
+
+"type": "local"
+
+"command": ["npx" "@playwright/mcp"]
+
+"timeout": { "catalog": 30000 "execution": 30000 }
+
+}
+
+}
+
+}
+
+}
+
+```
+
+The differences that matter:
+
+- The `enabled` flag is replaced by the inverse flag `disabled` and servers connect automatically.
+
+- One `timeout` value is now split into separate purposes: `startup` (30 seconds) `catalog` (30 seconds) and `execution` (12 hours).
+
+- The old `tools` glob map is replaced by a permissions` array, which can also be used per agent.
+
+- V1 made MCP tools directly available. V2 routes them through Code Mode by default. Set `codemode: false` to keep the tools in the models tool list.
+
+- Tools are renamed to the format `<server>_<tool>`. For example browser tools become `playwright_browser_snapshot`. Similar names.
+
+## Keeping it contained
+
+Keep the list of capabilities because each tool adds context cost on every request. Deny anything the agent should not do: `browser_run_code_unsafe` is documented as an RCE‑equivalent. Playwright MCP also states that it is not a security boundary. Client‑side permissions are what enforce the limits.
+
+## When something else fits
+
+Playwright maintainers now recommend that high‑throughput coding agents use the Playwright CLI with SKILLs. A CLI call avoids loading tool schemas and accessibility trees into the context. Playwright MCP remains useful when a browser must stay alive across steps: when exploring an unfamiliar flow verifying a fix or keeping a logged‑in session.

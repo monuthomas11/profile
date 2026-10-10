@@ -1,26 +1,173 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
+ * THE CHANGELOG WORLD — semantic ink on paper stock.
+ * Color only ever means something here: added (green), removed (red),
+ * changed (amber), link/conversation (blue). Everything else is ink,
+ * hairline, and paper.
+ */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f4f4f1;
+  --foreground: #1a1c20;
+  --muted: #e9e9e4;
+  --muted-foreground: #565b63;
+  --border: rgba(26, 28, 32, 0.16);
+  --accent: #2b5fd9;
+  --accent-foreground: #ffffff;
+  --surface: #ffffff;
+  --success: #1b6e36;
+  --danger: #b3352b;
+  --added: #1b6e36;
+  --removed: #b3352b;
+  --changed: #7d5a0e;
+  --mark: rgba(26, 28, 32, 0.42);
+}
+
+.dark {
+  --background: #15171b;
+  --foreground: #e8e9e5;
+  --muted: #1d2026;
+  --muted-foreground: #a6abb4;
+  --border: rgba(232, 233, 229, 0.18);
+  --accent: #7fa9ff;
+  --accent-foreground: #10121a;
+  --surface: #1b1e24;
+  --success: #4fc46b;
+  --danger: #ff7a6e;
+  --added: #4fc46b;
+  --removed: #ff7a6e;
+  --changed: #e3b23c;
+  --mark: rgba(232, 233, 229, 0.45);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-surface: var(--surface);
+  --color-success: var(--success);
+  --color-danger: var(--danger);
+  --color-added: var(--added);
+  --color-removed: var(--removed);
+  --color-changed: var(--changed);
+  --color-mark: var(--mark);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-archivo);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
+  /* Keep the sticky header from covering the top of anchor targets. */
+  scroll-padding-top: 4.5rem;
+}
+
+/* One brand-colored focus indicator for every interactive element. */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), Arial, sans-serif;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-archivo), Arial, sans-serif;
+  text-wrap: balance;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--added) 22%, transparent);
+}
+
+img {
+  max-width: 100%;
+}
+
+/*
+ * Code: the small pill around inline code belongs to the component, but the
+ * <code> inside a <pre> must keep the block's own ink and spacing — a pill
+ * there paints light-on-light in paper mode and swallows the text.
+ */
+.prose pre code {
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+}
+
+/*
+ * The typography plugin wraps inline code in markdown ticks. The pill already
+ * says "this is code", so the ticks only read as specks in the corners.
+ */
+.prose code::before,
+.prose code::after {
+  content: none;
+}
+
+/*
+ * Diff marks: the world's notation glyphs (##, +, ~) sit in a mono gutter
+ * and take one green tint-flash when their entry applies — the page's single
+ * authored motion moment, "a patch landing".
+ */
+.diff-mark {
+  display: inline-block;
+  padding: 0 0.2em;
+  border-radius: 2px;
+  font-family: var(--font-geist-mono), monospace;
+  color: var(--mark);
+  background-color: transparent;
+}
+
+.diff-mark--added {
+  color: var(--added);
+}
+
+/*
+ * Reveal gating: motion may only hide content when JS is alive to bring it
+ * back. The pre-paint script marks the document as `js`; without it, every
+ * entry is fully visible from the first byte.
+ */
+html:not(.js) .reveal {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+@keyframes mark-apply {
+  0% {
+    background-color: color-mix(in srgb, var(--added) 32%, transparent);
+  }
+  100% {
+    background-color: transparent;
+  }
+}
+
+.reveal.is-in .diff-mark {
+  animation: mark-apply 900ms ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

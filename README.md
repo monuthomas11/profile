@@ -1,36 +1,41 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Profile Website
 
-## Getting Started
+A bold, fast, and accessible digital CV for a single owner. The project follows the plan in `PLAN.md` and is built with Next.js App Router, TypeScript, Tailwind CSS, and Motion.
 
-First, run the development server:
+## Local development
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open <http://localhost:3000>.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Required environment variables
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Copy `.env.example` to `.env.local` and fill in values when you are ready to enable contact email delivery:
 
-## Learn More
+```bash
+cp .env.example .env.local
+```
 
-To learn more about Next.js, take a look at the following resources:
+- `NEXT_PUBLIC_SITE_URL`: public site URL used in metadata and canonical links
+- `RESEND_API_KEY`: API key for sending contact messages via Resend
+- `CONTACT_TO_EMAIL`: destination email for contact form submissions
+- `CONTACT_FROM_EMAIL`: sender email used by Resend
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+The app builds and runs without these values present; the contact form falls back to a clear error message when email delivery is unavailable.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Features
 
-## Deploy on Vercel
+- Single-page CV homepage with anchored sections
+- Dark and light theme support with persistent preference
+- Downloadable placeholder CV PDF
+- Print-friendly `/resume` page
+- Contact form with validation, honeypot protection, and rate limiting
+- Blog with MDX posts and RSS feed
+- SEO metadata, sitemap, robots, and Open Graph image support
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Deployment
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This project is designed for Vercel. Configure the same environment variables in your Vercel project settings before enabling the contact form in production.
