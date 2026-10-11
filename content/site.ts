@@ -9,7 +9,7 @@ export const site = {
    * Bump it when the record actually changes; a rev with no diff behind it is
    * the lie the changelog grammar exists to refuse.
    */
-  rev: "2026-10-10",
+  rev: "2026-10-11",
   siteDomain: "",
   tagline:
     "Full stack developer working with .NET, Angular, TypeScript, Playwright test automation, and Azure. Microsoft Certified Azure Developer Associate, GitHub Copilot Certified.",
@@ -22,7 +22,7 @@ export const site = {
   seo: {
     title: "Monu Thomas — software engineer, Bengaluru",
     description:
-      "Monu Thomas is a software engineer in Bengaluru working with ASP.NET Core, Blazor, Angular, Azure, and SQL. Read the writing, or start a conversation.",
+      "Monu Thomas is a software engineer in Bengaluru working with ASP.NET, .NET Core, Angular, Azure, and SQL. Read the writing, or start a conversation.",
     image: "/images/photo.jpg",
   },
 } as const;
