@@ -9,7 +9,7 @@ export const site = {
    * Bump it when the record actually changes; a rev with no diff behind it is
    * the lie the changelog grammar exists to refuse.
    */
-  rev: "2026-10-11",
+  rev: "2026-10-14",
   siteDomain: "",
   tagline:
     "Full stack developer working with .NET, Angular, TypeScript, Playwright test automation, and Azure. Microsoft Certified Azure Developer Associate, GitHub Copilot Certified.",

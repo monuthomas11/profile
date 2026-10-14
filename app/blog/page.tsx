@@ -11,7 +11,7 @@ export default async function BlogPage() {
       <div className="mx-auto max-w-6xl">
         <div className="mb-10 max-w-2xl">
           <p className="text-sm font-semibold tracking-[0.25em] text-accent uppercase">Writing</p>
-          <h1 className="mt-6 text-5xl font-black tracking-[-0.04em] text-foreground text-balance">Notes on systems, product, and craft.</h1>
+          <h1 className="mt-6 text-5xl font-black tracking-[-0.04em] text-foreground text-balance">Space for some thoughtful scribbles, tech ideas, and random musings.</h1>
         </div>
 
         {posts.length === 0 ? (

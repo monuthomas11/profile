@@ -1,0 +1,30 @@
+---
+title: "So .NET 11 is pretty much here (well, almost)"
+description: "A casual look at what is new in .NET 11 preview, and whether you should upgrade."
+date: "2026-10-14"
+tags: [".NET", "C#", "ASP.NET Core", "MAUI", "Blazor"]
+---
+
+If you've been wondering what's coming next in the .NET world, here's the quick version. .NET 11 is still in preview as I write this, with the final release due in November 2026. It's another Standard Term Support (STS) version like most of the recent ones, so you get two years of support. It's a good one to play with at the moment, just don't necessarily go and put your production app on it yet.
+
+## What's new under the hood
+
+The big one for me is runtime async. It's a new way of doing async at the runtime level, with config, diagnostics and AOT support. There's a lot of JIT work going on to improve startup time and reduce the overhead of common async patterns. Zstandard compression has also landed in the libraries, which should make both compressing and decompressing significantly faster, while still keeping file sizes competitive.
+
+## The stuff you'll actually touch day to day
+
+The SDK has had a bit of a go at it. The CLI commands are improved, there are more code analyzers, and it now performs vulnerability and end of life checks as part of the build process (very useful if you're the kind of person who likes to catch issues early). `dotnet new` now has an MCP server template. Console apps now have `System.Net.Http.Json` included by default, so you don't have to add that package yourself.
+
+On the C# side we have collection expression arguments and union types, plus extended layout support.
+
+## Web and mobile
+
+In ASP.NET Core, Blazor SSR can now do client side validation, and QuickGrid works without interactivity. For MAUI, XAML source generation is now the default for all apps, which should help with build times and runtime performance. CoreCLR is now the default runtime for Android release builds. On the Blazor WebAssembly front, the team is moving from Mono to CoreCLR (still very early work).
+
+## Small but nice
+
+LINQ gets full outer joins, `System.Text.Json` can now parse JSON Lines, and there's a new X25519 key agreement in the cryptography library. Entity Framework Core has also added a warning (EF1004) for async queries that end up being run synchronously, which has been a real pain point for a lot of people.
+
+## So should you upgrade?
+
+If you're on .NET 10 there's no urgency to get into production. It's worth installing the preview SDK on a side project and having a play, in particular with runtime async and the MAUI changes. Just don't go live with it yet. Keep a very close eye on the final release notes in November, as preview features can still change.
